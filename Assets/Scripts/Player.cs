@@ -1,3 +1,4 @@
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,7 +9,7 @@ public class Player : MonoBehaviour
     public float jumpForce = 12;
     public float jumpTimeCounter = 0.3f;
     private float jumpTime;
-    public float jumpCircleRadius;
+    public Vector2 jumpBoxSize;
     public float attackCooldown = 0.29f;
     public float spellCooldown;
     private float lastAttack;
@@ -90,7 +91,7 @@ public class Player : MonoBehaviour
     private void Jump()
     {
         while (PublicVariables.isColoring) { return; }
-        isGrounded = Physics2D.OverlapCircle(feetPos.position, jumpCircleRadius, groundLayer);
+        isGrounded = Physics2D.OverlapBox(feetPos.position, jumpBoxSize, 0, groundLayer);
         if (isGrounded && Input.GetKeyDown(KeyCode.Space))
         {
             isJumping = true;
@@ -283,5 +284,9 @@ public class Player : MonoBehaviour
         ColorManager.Instance.CurrentColor = colors[currentColorIndex].name;
     }
 
-    private void OnDrawGizmos() { }
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireCube(feetPos.position, jumpBoxSize);
+    }
 }
